@@ -44,7 +44,11 @@ Once your `tfvars` file or all environmental variables are ready, just run:
 ```bash
 terraform apply
 ```
-in your repo directory. 
+in your repo directory. Once completed, you'll see some additional connection data at the end:
+
+* Your Client IP address.
+* Your GlusterFS Mountpoint on your Client.
+* Some additional, totally optional (but recommended) security stuff.
 
 Environment
 -----------
