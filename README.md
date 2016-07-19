@@ -72,9 +72,12 @@ gluster peer status
 
 Your data, on the client, will be accessible to the volume mounted on `/mnt/gluster`
 
+Security
+--------
+
 It is recommended that, after you've confirmed you can access the client and it can access the cluster, that you run, on any of the storage nodes (not the client):
 
 ```bash
 gluster volume set volume1 auth.allow <CLIENT DROPLET IP ADDRESS>
 ```
-You can also allow any other public IP addresses you would like to add to the access list.
+You can also allow any other public IP addresses you would like to add to the access list (for example, any application servers that may require access to your storage cluster, etc.)
