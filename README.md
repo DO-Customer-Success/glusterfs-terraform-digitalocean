@@ -36,6 +36,16 @@ ssh-keygen -lf do-key.pub | awk '{print $2}'
 ```
 or run it on the path to your existing public keypair.
 
+Deploying
+---------
+
+Once your `tfvars` file or all environmental variables are ready, just run:
+
+```bash
+terraform apply
+```
+in your repo directory. 
+
 Environment
 -----------
 

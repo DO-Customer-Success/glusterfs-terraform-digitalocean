@@ -34,6 +34,10 @@ resource "digitalocean_droplet" "primary" {
     command = "echo \"${self.ipv4_address_private}\" ${self.name} >> hosts.txt"
   }
 
+  provisioner "local-exec" {
+    command = "echo \"${self.ipv4_address_private}:/storage \" >> hosts_string.txt"
+  }
+
   provisioner "remote-exec" {
   inline = [
     "apt-get update",
@@ -60,6 +64,10 @@ resource "digitalocean_droplet" "peer" {
 
   provisioner "local-exec" {
     command = "echo \"${self.ipv4_address_private}\" ${self.name} >> hosts.txt"
+  }
+
+  provisioner "local-exec" {
+    command = "echo \"${self.ipv4_address_private}:/storage \" >> hosts_string.txt"
   }
 
   provisioner "remote-exec" {
@@ -95,7 +103,16 @@ resource "digitalocean_droplet" "peer-prober" {
   }
 
   provisioner "local-exec" {
-    command = "rm hosts.txt"
+    command = "echo \"${self.ipv4_address_private}:/storage \" >> hosts_string.txt"
+  }
+
+  provisioner "file" {
+    source = "./hosts_string.txt"
+    destination = "/tmp/hosts_string.txt"
+  }
+
+  provisioner "local-exec" {
+    command = "rm hosts.txt && hosts_string.txt"
   }
 
   provisioner "remote-exec" {
@@ -105,9 +122,7 @@ resource "digitalocean_droplet" "peer-prober" {
     "mkdir /storage",
     "for host in `cat /tmp/hosts.txt | awk '{print $1}' | grep -v ${self.ipv4_address_private}`; do gluster peer probe $host; done",
     "echo `cat /tmp/hosts.txt` >> /etc/hosts",
-    "export GLUSTER_COUNT = `cat /tmp/hosts.txt | wc -l`",
-    "for host in `cat /tmp/hosts.txt | awk '{print $1}'`; do export GLUSTER_HOSTS=\"$GLUSTER_HOSTS $host:/storage \"; done",
-    "gluster volume create volume1 replica $GLUSTER_COUNT transport tcp $GLUSTER_HOSTS force",
+    "gluster volume create volume1 replica ${var.peer_count + 2} transport tcp `cat /tmp/hosts_string.txt` force",
     "gluster volume start volume1"
     ]
   }
