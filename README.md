@@ -27,7 +27,7 @@ ssh_key_fingerprint = ""
 You can generate a keypair for use above using:
 
 ```bash
-ssh-keygen -t rsa -P "" do-key
+ssh-keygen -t rsa -P '' -f ./do-key
 ```
 and get the fingerprint:
 
