@@ -148,7 +148,7 @@ resource "digitalocean_droplet" "client" {
     "apt-get update",
     "apt-get install glusterfs-client -y",
     "mkdir /mnt/gluster",
-    "mount -t glusterfs ${digitalocean_droplet.primary.ipv4_address_private}:/storage /mnt/gluster"
+    "mount -t glusterfs ${digitalocean_droplet.primary.ipv4_address_private}:/volume1 /mnt/gluster"
     ]
   }
 }
